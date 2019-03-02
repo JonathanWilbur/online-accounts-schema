@@ -1,3 +1,5 @@
+-- DROP TABLE IF EXISTS OnlineAccounts;
+
 CREATE TABLE IF NOT EXISTS OnlineAccounts
 (
     `id` SERIAL PRIMARY KEY,
@@ -42,6 +44,9 @@ CREATE TABLE IF NOT EXISTS OnlineAccounts
     `serviceDescription`                TEXT COMMENT 'A description of the service or the account held with the service.',
     `notes`                             TEXT
 );
+
+ALTER TABLE OnlineAccounts
+ADD UNIQUE INDEX (`serviceName`, `accountName`);
 
 CREATE TRIGGER UppercaseServiceNameInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
