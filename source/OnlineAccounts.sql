@@ -36,18 +36,18 @@ CREATE TABLE IF NOT EXISTS OnlineAccounts
     `multifactorAuthenticationMethod`   VARCHAR(32)
 );
 
-CREATE TRIGGER UppercaseServiceName
+CREATE TRIGGER UppercaseServiceNameInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.serviceName = UPPER(NEW.serviceName);
 
-CREATE TRIGGER LowercaseEmail
+CREATE TRIGGER LowercaseEmailInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.registeredEmailAddress = LOWER(NEW.registeredEmailAddress);
 
-CREATE TRIGGER DeleteAccount
+CREATE TRIGGER DeleteAccountInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.deleted = (NEW.deletionDate IS NOT NULL OR NEW.deletionReason IS NOT NULL);
 
-CREATE TRIGGER EnableMFA
+CREATE TRIGGER EnableMFAInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.multifactorAuthenticationEnabled = (NEW.multifactorAuthenticationMethod IS NOT NULL);
