@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS OnlineAccounts
 
     -- Miscellaneous
     `governmentRelated`                 BOOLEAN COMMENT 'Whether the account is for a service that the government operates, such as the Department of Motor Vehicles (DMV).',
+    `employerRelated`                   BOOLEAN COMMENT 'Whether the account was set up or is managed by the owner''s employer.',
     `hasMoney`                          BOOLEAN COMMENT 'Whether the account holds the owner''s money.',
     `notes`                             TEXT
 );
