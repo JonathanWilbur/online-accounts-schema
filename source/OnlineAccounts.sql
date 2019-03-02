@@ -8,32 +8,37 @@ CREATE TABLE IF NOT EXISTS OnlineAccounts
     `registeredEmailAddress`            TINYTEXT COMMENT 'The email address registerd with the service.',
 
     -- Lifecycle
-    `creationDate`                      DATE COMMENT 'The day the account was created.',
-    `deletionDate`                      DATE COMMENT 'The day the account was deleted.',
-    `deletionReason`                    TEXT COMMENT 'A short description of why the account was closed.',
-    `deleted`                           BOOLEAN,
     `status`                            VARCHAR(32) COMMENT 'A free-form description of the state of the account.',
+    `creationDate`                      DATE COMMENT 'The day the account was created.',
+    `closureDate`                       DATE COMMENT 'The day the account was closed.',
+    `closureReason`                     TEXT COMMENT 'A short description of why the account was closed.',
+    `closed`                            BOOLEAN COMMENT 'Whether the account was closed.',
 
     -- Data Usage
-    `hasSocialSecurityNumber`           BOOLEAN,
-    `hasDriversLicenseNumber`           BOOLEAN,
-    `hasPostalAddress`                  BOOLEAN,
-    `hasCreditCardInformation`          BOOLEAN,
-    `hasOtherCredentials`               BOOLEAN,
-    `hasTelephoneNumber`                BOOLEAN,
-    `hasEmailAddress`                   BOOLEAN,
-    `hasPersonalSecrets`                BOOLEAN,
-    `hasProfilePicture`                 BOOLEAN,
-    `hasLegalData`                      BOOLEAN,
-    `hasFinancialData`                  BOOLEAN,
-    `hasMedicalData`                    BOOLEAN,
-    `hasAcademicData`                   BOOLEAN,
-    `hasCryptoCurrencyKeys`             BOOLEAN,
-    `hasCryptographicKeys`              BOOLEAN,
-    
+    `hasSocialSecurityNumber`           BOOLEAN COMMENT 'Whether the account has or uses the owner''s social security number.',
+    `hasDriversLicenseNumber`           BOOLEAN COMMENT 'Whether the account has or uses the owner''s driver''s license number.',
+    `hasPostalAddress`                  BOOLEAN COMMENT 'Whether the account has or uses the owner''s postal address.',
+    `hasCreditCardInformation`          BOOLEAN COMMENT 'Whether the account has or uses the owner''s credit card information.',
+    `hasOtherCredentials`               BOOLEAN COMMENT 'Whether the account has or uses the owner''s credentials to other services.',
+    `hasTelephoneNumber`                BOOLEAN COMMENT 'Whether the account has or uses the owner''s telephone number.',
+    `hasEmailAddress`                   BOOLEAN COMMENT 'Whether the account has or uses the owner''s email address.',
+    `hasPersonalSecrets`                BOOLEAN COMMENT 'Whether the account has or uses the owner''s personal secrets.',
+    `hasProfilePicture`                 BOOLEAN COMMENT 'Whether the account has or uses a picture of the owner''s face.',
+    `hasLegalData`                      BOOLEAN COMMENT 'Whether the account has or uses the owner''s legal information, such as criminal history or current litigations.',
+    `hasFinancialData`                  BOOLEAN COMMENT 'Whether the account has or uses the owner''s financial information, such as bank numbers or credit history.',
+    `hasMedicalData`                    BOOLEAN COMMENT 'Whether the account has or uses the owner''s medical data, such as diagnosis codes or medication information.',
+    `hasAcademicData`                   BOOLEAN COMMENT 'Whether the account has or uses the owner''s academic information, such as enrollment status, tuition, or grades.',
+    `hasCryptoCurrencyKeys`             BOOLEAN COMMENT 'Whether the account has or uses the owner''s private keys to cryptocurrency wallets.',
+    `hasCryptographicKeys`              BOOLEAN COMMENT 'Whether the account has or uses the owner''s cryptographic keys to something.',
+
     -- Security
-    `multifactorAuthenticationEnabled`  BOOLEAN,
-    `multifactorAuthenticationMethod`   VARCHAR(32)
+    `multifactorAuthenticationEnabled`  BOOLEAN COMMENT 'Whether multi-factor authentication (MFA) is enabled for this account.',
+    `multifactorAuthenticationMethod`   VARCHAR(32) COMMENT 'A description of the method used for multi-factor authentication (MFA).',
+
+    -- Miscellaneous
+    `governmentRelated`                 BOOLEAN COMMENT 'Whether the account is for a service that the government operates, such as the Department of Motor Vehicles (DMV).',
+    `hasMoney`                          BOOLEAN COMMENT 'Whether the account holds the owner''s money.',
+    `notes`                             TEXT
 );
 
 CREATE TRIGGER UppercaseServiceNameInOnlineAccounts
@@ -44,9 +49,9 @@ CREATE TRIGGER LowercaseEmailInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.registeredEmailAddress = LOWER(NEW.registeredEmailAddress);
 
-CREATE TRIGGER DeleteAccountInOnlineAccounts
+CREATE TRIGGER CloseAccountInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
-    SET NEW.deleted = (NEW.deletionDate IS NOT NULL OR NEW.deletionReason IS NOT NULL);
+    SET NEW.closed = (NEW.closureDate IS NOT NULL OR NEW.closureReason IS NOT NULL);
 
 CREATE TRIGGER EnableMFAInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
