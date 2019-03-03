@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS OnlineAccounts
     `hasMoney`                          BOOLEAN COMMENT 'Whether the account holds the owner''s money.',
     `serviceDescription`                TEXT COMMENT 'A description of the service or the account held with the service.',
     `notes`                             TEXT
-);
+)
+    COMMENT 'A table of online accounts.';
 
 ALTER TABLE OnlineAccounts
 ADD UNIQUE INDEX (`serviceName`, `accountName`);
