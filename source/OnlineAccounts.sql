@@ -66,7 +66,11 @@ BEFORE INSERT ON OnlineAccounts FOR EACH ROW
 
 CREATE VIEW IF NOT EXISTS OnlineAccountsToUpdateAfterMoving
 AS
-    SELECT serviceName, accountName, registeredEmailAddress
+    SELECT
+        serviceName AS `Service Name`,
+        accountName AS `Account Name`,
+        registeredEmailAddress AS `Email`,
+        FALSE AS `Updated`
     FROM OnlineAccounts
     WHERE
         (hasPostalAddress = TRUE OR hasPostalAddress IS NULL) AND
@@ -76,7 +80,9 @@ AS
 
 CREATE VIEW IF NOT EXISTS OnlineServicesWithMultipleAccounts
 AS
-    SELECT serviceName AS `Service Name`, COUNT(serviceName) as `Number of Accounts`
+    SELECT
+        serviceName AS `Service Name`,
+        COUNT(serviceName) AS `Number of Accounts`
     FROM OnlineAccounts
     GROUP BY `Service Name`
     HAVING `Number of Accounts` > 1;
