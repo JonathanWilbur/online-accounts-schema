@@ -63,3 +63,20 @@ BEFORE INSERT ON OnlineAccounts FOR EACH ROW
 CREATE TRIGGER EnableMFAInOnlineAccounts
 BEFORE INSERT ON OnlineAccounts FOR EACH ROW
     SET NEW.multifactorAuthenticationEnabled = (NEW.multifactorAuthenticationMethod IS NOT NULL);
+
+CREATE VIEW IF NOT EXISTS OnlineAccountsToUpdateAfterMoving
+AS
+    SELECT serviceName, accountName, registeredEmailAddress
+    FROM OnlineAccounts
+    WHERE
+        (hasPostalAddress = TRUE OR hasPostalAddress IS NULL) AND
+        (closed = FALSE OR closed IS NULL) AND
+        closureDate IS NULL AND
+        closureReason IS NULL;
+
+CREATE VIEW IF NOT EXISTS OnlineServicesWithMultipleAccounts
+AS
+    SELECT serviceName AS `Service Name`, COUNT(serviceName) as `Number of Accounts`
+    FROM OnlineAccounts
+    GROUP BY `Service Name`
+    HAVING `Number of Accounts` > 1;
